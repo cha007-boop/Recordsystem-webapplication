@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Vue Template</title>
+    <!-- Import Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/styles.css" />
+    <!-- Import Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Import axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.20.0/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{ intro }}</h1>
+        <!-- Login status and button -->
+        <div class="d-flex align-items-center gap-2">
+            <span v-if="userInfo" class="badge text-bg-success">
+                Logged in as {{ userInfo.username }}
+            </span>
+            <span v-else class="badge text-bg-secondary">Not logged in</span>
+            <!-- Log out button -->
+            <button v-if="userInfo" type="button" class="btn btn-outline-secondary btn-sm" @click="logout">
+                Log out
+            </button>
+            <!-- Dropdown menu for logging in -->
+            <div v-else class="dropdown">
+                <!-- This opens the dropdown -->
+                <button id="loginDropdown" type="button" class="btn btn-primary btn-sm" data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside" aria-expanded="false" @click="authMessage = ''">
+                    Log in
+                </button>
+                <!-- The dropdown -->
+                <div class="dropdown-menu dropdown-menu-end login-dropdown p-3 shadow">
+                    <!-- prevent to not reload page on form submit -->
+                    <form @submit.prevent="login">
+                        <h2 class="h5 mb-3">Log in</h2>
+                        <div class="mb-3">
+                            <label for="loginUsername" class="form-label">Username</label>
+                            <input id="loginUsername" v-model.trim="auth.username" class="form-control"
+                                autocomplete="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input id="loginPassword" v-model="auth.password" type="password" class="form-control"
+                                autocomplete="current-password" required>
+                        </div>
+                        <p v-if="authMessage" class="alert alert-danger mb-3" role="alert">
+                            {{ authMessage }}
+                        </p>
+                        <button type="submit" class="btn btn-primary w-100" :disabled="isLoggingIn">
+                            {{ isLoggingIn ? 'Logging in...' : 'Log in' }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Bootstrap modal for delete -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h2 class="modal-title fs-5" id="deleteModalLabel">Confirm deletion</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+                        @click="deleteTarget = null"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">
+                        Are you sure you want to delete <strong>{{ deleteTarget?.name }}</strong>?
+                        This action cannot be undone.
+                    </p>
+                    <p v-if="deleteError" class="alert alert-danger mt-3 mb-0" role="alert">
+                        {{ deleteError }}
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="deleteTarget = null"
+                        :disabled="deletingId !== null">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger" @click="deleteItem"
+                        :disabled="!deleteTarget || deletingId !== null">
+                        {{ deletingId !== null ? 'Deleting...' : 'Delete stock' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Import App -->
+    <script src="./js/main.js"></script>
+
+    <!-- Mount App -->
+    <script>
+        const mountedApp = app.mount('#app')
+    </script>
+</body>
+
+</html>

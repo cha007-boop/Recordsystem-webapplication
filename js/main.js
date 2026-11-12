@@ -109,7 +109,13 @@ const app = Vue.createApp({
         getAll() {
             const params = {}
             const filters = {
-                // FILL WITH FILTER VALUES FROM data()
+                id: this.id,
+                title: this.title,
+                artist: this.artist,
+                minDuration: this.minDuration,
+                maxDuration: this.maxDuration,
+                minPubYear: this.minPubYear,
+                maxPubYear: this.maxPubYear
             }
             Object.entries(filters).forEach(([key, value]) => {
                 if (value !== null && value !== undefined && value !== '') {

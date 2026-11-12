@@ -30,6 +30,13 @@ const app = Vue.createApp({
             postMessage: '',
             postError: '',
             errorMessage: '',
+            id: null,
+            title: null,
+            artist: null,
+            minDuration: null,
+            maxDuration: null,
+            minPubYear: null,
+            maxPubYear: null,
 
             auth: { username: '', password: '' },
             userInfo: null,

@@ -1,15 +1,20 @@
 const authURL = ''
-const baseURL = ''
+const baseURL = 'https://restfulrecordsapi-gcg3dxbvhzekabdc.italynorth-01.azurewebsites.net/api/Records'
 
 const tokenName = 'userInfo'
 
 const app = Vue.createApp({
     data() {
         return {
-            intro: 'Welcome to my Vue template',
+            intro: 'RESTful records',
             list: [],
-            newItem: {
-                prop: 'value'
+            newRecord: {
+                ID: null,
+                Title: '',
+                Artist: '',
+                Duration: null,
+                PublicationYear: null
+
             },
             sortBy: null,
             sortAscending: true,

@@ -2,7 +2,7 @@ const authURL = 'https://restfulrecordsapi-gcg3dxbvhzekabdc.italynorth-01.azurew
 
 app.component('login-dropdown', {
     props: {
-        userInfo: {
+        theUserInfo: {
             type: Object,
             required: false,
             default: { username: '', role: '', token: '' }
@@ -12,24 +12,23 @@ app.component('login-dropdown', {
         /*html*/
         `<!-- Login status and button -->
         <div class="d-flex align-items-center gap-2">
-            <span v-if="userInfo" class="badge text-bg-success">
+            <span v-if="userInfo" id="loginStatusSpan" class="badge text-bg-success">
                 Logged in as {{ userInfo.username }}
             </span>
-            <span v-else class="badge text-bg-secondary">Not logged in</span>
+            <span v-else id="loginStatusSpan" class="badge text-bg-secondary">Not logged in</span>
             <!-- Log out button -->
             <button v-if="userInfo" type="button" class="btn btn-outline-secondary btn-sm" @click="logout">
                 Log out
             </button>
             <!-- Dropdown menu for logging in -->
-            <div v-else class="">
+            <div v-else class="dropdown">
                 <!-- This opens the dropdown -->
                 <button id="loginDropdown" type="button" class="btn btn-primary btn-sm" data-bs-toggle="dropdown"
                     data-bs-auto-close="outside" aria-expanded="false" @click="authMessage = ''">
                     Log in
                 </button>
                 <!-- The dropdown -->
-                <div>
-                <!-- class="dropdown-menu dropdown-menu-end login-dropdown p-3 shadow"> --> 
+                <div class="dropdown-menu dropdown-menu-end login-dropdown p-3 shadow"> 
                     <!-- prevent to not reload page on form submit -->
                     <form @submit.prevent="login">
                         <h2 class="h5 mb-3">Log in</h2>
@@ -43,10 +42,10 @@ app.component('login-dropdown', {
                             <input id="loginPassword" v-model="auth.password" type="password" class="form-control"
                                 autocomplete="current-password" required>
                         </div>
-                        <p v-if="authMessage" class="alert alert-danger mb-3" role="alert">
+                        <p v-if="authMessage" id="dropdownAuthMessage" class="alert alert-danger mb-3" role="alert">
                             {{ authMessage }}
                         </p>
-                        <button type="submit" class="btn btn-primary w-100" :disabled="isLoggingIn">
+                        <button type="submit" id="loginButton" class="btn btn-primary w-100" :disabled="isLoggingIn">
                             {{ isLoggingIn ? 'Logging in...' : 'Log in' }}
                         </button>
                     </form>
@@ -92,7 +91,7 @@ app.component('login-dropdown', {
                         role: this.parseJwt(response.data.token)["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
                         token: response.data.token
                     }
-                    localStorage.setItem(tokenName, JSON.stringify(this.userInfo))
+                    sessionStorage.setItem(tokenName, JSON.stringify(this.userInfo))
                     this.auth.password = ''
                     bootstrap.Dropdown.getOrCreateInstance(document.getElementById('loginDropdown')).hide()
                     this.$emit('login-event', this.userInfo)
@@ -106,7 +105,7 @@ app.component('login-dropdown', {
 
         },
         logout() {
-            localStorage.removeItem(tokenName)
+            sessionStorage.removeItem(tokenName)
             this.userInfo = null
             this.auth = { username: '', password: '' }
         },

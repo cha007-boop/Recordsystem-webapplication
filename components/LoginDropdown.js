@@ -5,19 +5,19 @@ app.component('login-dropdown', {
         theUserInfo: {
             type: Object,
             required: false,
-            default: { username: '', role: '', token: '' }
+            default: null
         }
     },
     template:
         /*html*/
         `<!-- Login status and button -->
         <div class="d-flex align-items-center gap-2">
-            <span v-if="userInfo" id="loginStatusSpan" class="badge text-bg-success">
-                Logged in as {{ userInfo.username }}
+            <span v-if="theUserInfo" id="loginStatusSpan" class="badge text-bg-success">
+                Logged in as {{ theUserInfo.username }}
             </span>
             <span v-else id="loginStatusSpan" class="badge text-bg-secondary">Not logged in</span>
             <!-- Log out button -->
-            <button v-if="userInfo" type="button" class="btn btn-outline-secondary btn-sm" @click="logout">
+            <button v-if="theUserInfo" type="button" class="btn btn-outline-secondary btn-sm" @click="logout">
                 Log out
             </button>
             <!-- Dropdown menu for logging in -->
@@ -56,11 +56,11 @@ app.component('login-dropdown', {
     data() {
         return {
             auth: { username: '', password: '' },
-            userInfo: null,
             authMessage: '',
             isLoggingIn: false
         }
     },
+   
     methods: {
         parseJwt(token) {
             const payload = token.split('.')[1];
@@ -86,15 +86,15 @@ app.component('login-dropdown', {
                         throw new Error('The login response did not include an authentication token.')
                     }
 
-                    this.userInfo = {
+                    const userInfo = {
                         username: this.auth.username,
                         role: this.parseJwt(response.data.token)["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
                         token: response.data.token
                     }
-                    sessionStorage.setItem(tokenName, JSON.stringify(this.userInfo))
+                    sessionStorage.setItem(tokenName, JSON.stringify(userInfo))
                     this.auth.password = ''
                     bootstrap.Dropdown.getOrCreateInstance(document.getElementById('loginDropdown')).hide()
-                    this.$emit('login-event', this.userInfo)
+                    this.$emit('login-event', userInfo)
                 })
                 .catch((error) => {
                     this.authMessage = this.getRequestErrorMessage(error)
@@ -106,8 +106,8 @@ app.component('login-dropdown', {
         },
         logout() {
             sessionStorage.removeItem(tokenName)
-            this.userInfo = null
             this.auth = { username: '', password: '' }
+            this.$emit('logout-event')
         },
         getRequestErrorMessage(error) {
             const responseData = error.response?.data

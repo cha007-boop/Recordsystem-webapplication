@@ -1,4 +1,4 @@
-const baseURL = 'https://restfulrecordsapi-gcg3dxbvhzekabdc.italynorth-01.azurewebsites.net/api/Records'
+const baseURL = 'https://restfulrecordsapi-gcg3dxbvhzekabdc.italynorth-01.azurewebsites.net/api/Records/'
 
 const tokenName = 'userInfo'
 
@@ -44,15 +44,23 @@ const app = Vue.createApp({
         this.getAll()
     },
     created() {
-        const userInfoStr = localStorage.getItem(tokenName);
+        const userInfoStr = sessionStorage.getItem(tokenName);
         if (userInfoStr != null) {
             this.userInfo = JSON.parse(userInfoStr);
             this.getAll(); // Fetch aktiehandels immediately if user is already logged in
         }
     },
+    // beforeUnmount() {
+    //     logout();
+    //     // sessionStorage.clear()
+    //     // this.userInfo = null;
+    // },
     methods: {
         login(userInfo) {
             this.userInfo = userInfo
+        },
+        logout(){
+            this.userInfo = null
         },
         // Fetch items using the current filters and sort order.
         getAll() {
@@ -199,9 +207,13 @@ const app = Vue.createApp({
             this.deleteError = ''
 
             axios
-                .delete(baseURL + item.id)
+                .delete(baseURL + item.id, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.userInfo.token
+                    }
+                })
                 .then(() => {
-                    this.list = this.list.filter((item) => item.id !== item.id)
+                    this.list = this.list.filter((record) => record.id !== item.id)
                     bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal')).hide()
                     this.deleteTarget = null
                 })

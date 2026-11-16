@@ -23,38 +23,48 @@
                         <div class="card-body">
                             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                                 <h1 class="card-title mb-0">{{intro}}</h1>
+                                <login-dropdown :theUserInfo="userInfo" @login-event="login"></login-dropdown>
                             </div>
+
+
                             <!-- Add records inputs -->
 
                             <!-- filtering inputs -->
-                             <div>
+                            <div>
                                 <div>
                                     <label for="id" class="form-label">id</label>
-                                    <input class="form-control" placeholder="enter id" type="number" id="id" v-model="id">
+                                    <input class="form-control" placeholder="enter id" type="number" id="id"
+                                        v-model="id">
                                 </div>
                                 <div>
                                     <label for="title" class="form-label">title</label>
-                                    <input class="form-control" placeholder="enter title" type="text" id="title" v-model="title">
+                                    <input class="form-control" placeholder="enter title" type="text" id="title"
+                                        v-model="title">
                                 </div>
                                 <div>
                                     <label for="artist" class="form-label">artist</label>
-                                    <input class="form-control" placeholder="enter name of artist" type="text" id="artist" v-model="artist">
+                                    <input class="form-control" placeholder="enter name of artist" type="text"
+                                        id="artist" v-model="artist">
                                 </div>
                                 <div>
                                     <label for="minDuration" class="form-label">minimum duration</label>
-                                    <input class="form-control" placeholder="enter minimum record length in seconds" type="number" id="minDuration" v-model="minDuration">
+                                    <input class="form-control" placeholder="enter minimum record length in seconds"
+                                        type="number" id="minDuration" v-model="minDuration">
                                 </div>
                                 <div>
                                     <label for="maxDuration" class="form-label">maximum duration</label>
-                                    <input class="form-control" placeholder="enter maximum record length in seconds" type="number" id="maxDuration" v-model="maxDuration">
+                                    <input class="form-control" placeholder="enter maximum record length in seconds"
+                                        type="number" id="maxDuration" v-model="maxDuration">
                                 </div>
                                 <div>
                                     <label for="minPubYear" class="form-label">records from</label>
-                                    <input class="form-control" placeholder="enter year" type="number" id="minPubYear" v-model="minPubYear">
+                                    <input class="form-control" placeholder="enter year" type="number" id="minPubYear"
+                                        v-model="minPubYear">
                                 </div>
                                 <div>
                                     <label for="maxPubYear" class="form-label">records to</label>
-                                    <input class="form-control" placeholder="enter year" type="number" id="maxPubYear" v-model="maxPubYear">
+                                    <input class="form-control" placeholder="enter year" type="number" id="maxPubYear"
+                                        v-model="maxPubYear">
                                 </div>
 
                                 <button id="filterButton" @click="getAll">filtrer</button>
@@ -126,7 +136,11 @@
     </div>
     </div>
     <!-- Import App -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/main.js"></script>
+
+    <!-- Import Components -->
+    <script src="./components/LoginDropdown.js"></script>
 
     <!-- Mount App -->
     <script>

@@ -28,7 +28,7 @@
 
 
                             <!-- Add records inputs -->
-                             <div>
+                             <div v-if="userInfo">
                              <form @submit.prevent="postItem">
                                 <div>
                                     <label for="newTitle" class="form-label">Record title</label>

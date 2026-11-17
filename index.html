@@ -115,39 +115,44 @@
                                     <tbody>
                                         <tr v-for="record in list" :key="record.id">
                                             <th>{{record.id}}</th>
-                                            <template v-if="userInfo && editingId === record.id">
+                                            <template id="editingFields" v-if="userInfo && editingId === record.id">
                                                 <td>
-                                                    <input v-model.trim="editItem.title" class="form-control" required>
-                                                </td>
-                                                <td>
-                                                    <input v-model.trim="editItem.artist" class="form-control" required>
-                                                </td>
-                                                <td>
-                                                    <input v-model.trim="editItem.duration" type="number"
+                                                    <input id="edittitle" v-model.trim="editItem.title"
                                                         class="form-control" required>
                                                 </td>
                                                 <td>
-                                                    <input v-model.trim="editItem.publicationYear" type="number"
+                                                    <input id="editartist" v-model.trim="editItem.artist"
                                                         class="form-control" required>
+                                                </td>
+                                                <td>
+                                                    <input id="editduration" v-model.trim="editItem.duration"
+                                                        type="number" class="form-control" required>
+                                                </td>
+                                                <td>
+                                                    <input id="editpubyear" v-model.trim="editItem.publicationYear"
+                                                        type="number" class="form-control" required>
                                                 </td>
                                                 <td class="text-nowrap">
-                                                    <button type="button" class="btn btn-sm btn-primary me-1"
-                                                        @click="putItem" :disabled="isUpdating">
+                                                    <button type="button" id="confirmUpdate"
+                                                        class="btn btn-sm btn-primary me-1" @click="putItem"
+                                                        :disabled="isUpdating">
                                                         {{ isUpdating ? 'Saving...' : 'Save' }}
                                                     </button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                        @click="cancelEdit" :disabled="isUpdating">
+                                                    <button type="button" id="cancelUpdate"
+                                                        class="btn btn-sm btn-outline-secondary" @click="cancelEdit"
+                                                        :disabled="isUpdating">
                                                         Cancel
                                                     </button>
                                                 </td>
                                             </template>
                                             <template v-else>
-                                                <td>{{record.title}}</td>
-                                                <td>{{record.artist}}</td>
-                                                <td>{{record.duration}}</td>
-                                                <td>{{record.publicationYear}}</td>
+                                                <td id="recordTitle">{{record.title}}</td>
+                                                <td id="recordArtist">{{record.artist}}</td>
+                                                <td id="recordDuration">{{record.duration}}</td>
+                                                <td id="recordPubYear">{{record.publicationYear}}</td>
                                                 <td v-if="userInfo" class="text-nowrap">
-                                                    <button type="button" class="btn btn-sm btn-outline-primary me-1"
+                                                    <button id="updateButton" type="button"
+                                                        class="btn btn-sm btn-outline-primary me-1"
                                                         @click="startEdit(record)"
                                                         :disabled="editingId !== null || deletingId !== null">
                                                         Edit

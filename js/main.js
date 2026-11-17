@@ -7,12 +7,11 @@ const app = Vue.createApp({
         return {
             intro: 'RESTful records',
             list: [],
-            newRecord: {
-                ID: null,
-                Title: '',
-                Artist: '',
-                Duration: null,
-                PublicationYear: null
+            newRecord: {               
+                title: '',
+                artist: '',
+                duration: null,
+                publicationYear: null
 
             },
             sortBy: null,
@@ -120,7 +119,11 @@ const app = Vue.createApp({
             this.postMessage = ''
             this.postError = ''
             axios
-                .post(baseURL, this.newItem)
+                .post(baseURL, this.newRecord, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.userInfo.token
+                    }
+                })
                 .then((response) => {
                     console.log('Post method called')
                     this.list.push(response.data)

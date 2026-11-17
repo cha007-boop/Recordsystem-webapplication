@@ -28,6 +28,31 @@
 
 
                             <!-- Add records inputs -->
+                             <div>
+                             <form @submit.prevent="postItem">
+                                <div>
+                                    <label for="newTitle" class="form-label">Record title</label>
+                                    <input class="form-control" placeholder="enter Title" type="text" id="newTitle"
+                                        v-model.trim="newRecord.title">
+                                </div>
+                                <div>
+                                    <label for="newArtist" class="form-label">Artist's name</label>
+                                    <input class="form-control" placeholder="enter artist's name" type="text" id="newArtist"
+                                        v-model.trim="newRecord.artist">
+                                </div>
+                                <div>
+                                    <label for="newDuration" class="form-label">Record duration</label>
+                                    <input class="form-control" placeholder="enter record duration" type="number" id="newDuration"
+                                        v-model.trim="newRecord.duration">
+                                </div>
+                                <div>
+                                    <label for="newPubYear" class="form-label">Record Publication year</label>
+                                    <input class="form-control" placeholder="enter year of publication" type="number" id="newPubYear"
+                                        v-model.trim="newRecord.publicationYear">
+                                </div>
+                                <button id="addButton" type="submit" class="btn btn-primary">Add record</button>
+                             </form>
+                             </div>
 
                             <!-- filtering inputs -->
                             <div>
@@ -126,7 +151,7 @@
                         :disabled="deletingId !== null">
                         Cancel
                     </button>
-                    <button type="button" class="btn btn-danger" @click="deleteItem"
+                    <button id="modalDeleteButton" type="button" class="btn btn-danger" @click="deleteItem"
                         :disabled="!deleteTarget || deletingId !== null">
                         {{ deletingId !== null ? 'Deleting...' : 'Delete record' }}
                     </button>

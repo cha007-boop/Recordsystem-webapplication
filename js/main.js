@@ -7,7 +7,7 @@ const app = Vue.createApp({
         return {
             intro: 'RESTful records',
             list: [],
-            newRecord: {               
+            newRecord: {
                 title: '',
                 artist: '',
                 duration: null,
@@ -58,7 +58,7 @@ const app = Vue.createApp({
         login(userInfo) {
             this.userInfo = userInfo
         },
-        logout(){
+        logout() {
             this.userInfo = null
         },
         // Fetch items using the current filters and sort order.
@@ -142,10 +142,11 @@ const app = Vue.createApp({
         // Copy a Item's values into the inline editor.
         startEdit(item) {
             this.editingId = item.id
-            this.editAktie = {
-                prop: item.prop,
-                // Fill with rest of properties
-
+            this.editItem = {
+                title: item.title,
+                artist: item.artist,
+                duration: item.duration,
+                publicationYear: item.publicationYear
             }
             this.updateMessage = ''
             this.updateError = ''
@@ -168,7 +169,11 @@ const app = Vue.createApp({
             const updatedItem = { id, ...this.editItem }
 
             axios
-                .put(baseURL + id, updatedItem)
+                .put(baseURL + id, updatedItem, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.userInfo.token
+                    }
+                })
                 .then((response) => {
                     // Update the local list with the new values, using the response data if available.
                     const index = this.list.findIndex((item) => item.id === id)

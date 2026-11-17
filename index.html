@@ -23,39 +23,44 @@
                         <div class="card-body">
                             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                                 <h1 class="card-title mb-0">{{intro}}</h1>
-                                <login-dropdown :the-user-info="userInfo" @login-event="login" @logout-event="logout"></login-dropdown>
+                                <login-dropdown :the-user-info="userInfo" @login-event="login"
+                                    @logout-event="logout"></login-dropdown>
                             </div>
 
 
                             <!-- Add records inputs -->
-                             <div v-if="userInfo">
-                             <form @submit.prevent="postItem">
-                                <div>
-                                    <label for="newTitle" class="form-label">Record title</label>
-                                    <input class="form-control" placeholder="enter Title" type="text" id="newTitle"
-                                        v-model.trim="newRecord.title">
-                                </div>
-                                <div>
-                                    <label for="newArtist" class="form-label">Artist's name</label>
-                                    <input class="form-control" placeholder="enter artist's name" type="text" id="newArtist"
-                                        v-model.trim="newRecord.artist">
-                                </div>
-                                <div>
-                                    <label for="newDuration" class="form-label">Record duration</label>
-                                    <input class="form-control" placeholder="enter record duration" type="number" id="newDuration"
-                                        v-model.trim="newRecord.duration">
-                                </div>
-                                <div>
-                                    <label for="newPubYear" class="form-label">Record Publication year</label>
-                                    <input class="form-control" placeholder="enter year of publication" type="number" id="newPubYear"
-                                        v-model.trim="newRecord.publicationYear">
-                                </div>
-                                <button id="addButton" type="submit" class="btn btn-primary">Add record</button>
-                             </form>
-                             </div>
+
+                            <div v-if="userInfo">
+                                <h2>Add Record</h2>
+                                <form @submit.prevent="postItem">
+                                    <div>
+                                        <label for="newTitle" class="form-label">Record title</label>
+                                        <input class="form-control" placeholder="enter Title" type="text" id="newTitle"
+                                            v-model.trim="newRecord.title">
+                                    </div>
+                                    <div>
+                                        <label for="newArtist" class="form-label">Artist's name</label>
+                                        <input class="form-control" placeholder="enter artist's name" type="text"
+                                            id="newArtist" v-model.trim="newRecord.artist">
+                                    </div>
+                                    <div>
+                                        <label for="newDuration" class="form-label">Record duration</label>
+                                        <input class="form-control" placeholder="enter record duration" type="number"
+                                            id="newDuration" v-model.trim="newRecord.duration">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPubYear" class="form-label">Record Publication year</label>
+                                        <input class="form-control" placeholder="enter year of publication"
+                                            type="number" id="newPubYear" v-model.trim="newRecord.publicationYear">
+                                    </div>
+                                    <button id="addButton" type="submit" class="btn btn-primary mb-3">Add
+                                        record</button>
+                                </form>
+                            </div>
 
                             <!-- filtering inputs -->
                             <div>
+                                <h2>Filtering</h2>
                                 <div>
                                     <label for="id" class="form-label">id</label>
                                     <input class="form-control" placeholder="enter id" type="number" id="id"
@@ -86,13 +91,13 @@
                                     <input class="form-control" placeholder="enter year" type="number" id="minPubYear"
                                         v-model="minPubYear">
                                 </div>
-                                <div>
+                                <div class="mb-3">
                                     <label for="maxPubYear" class="form-label">records to</label>
                                     <input class="form-control" placeholder="enter year" type="number" id="maxPubYear"
                                         v-model="maxPubYear">
                                 </div>
 
-                                <button id="filterButton" @click="getAll">filtrer</button>
+                                <button class="btn btn-primary mb-3" id="filterButton" @click="getAll">filtrer</button>
                             </div>
                             <!-- Table of records -->
                             <div class="table-responsive">
@@ -110,14 +115,48 @@
                                     <tbody>
                                         <tr v-for="record in list" :key="record.id">
                                             <th>{{record.id}}</th>
-                                            <td>{{record.title}}</td>
-                                            <td>{{record.artist}}</td>
-                                            <td>{{record.duration}}</td>
-                                            <td>{{record.publicationYear}}</td>
-                                            <td v-if="userInfo">
-                                                <button id="deleteButton" class="btn btn-danger" @click="openDeleteModal(record)" 
-                                                :disabled="deletingId !== null">Delete Record</button>
-                                            </td>
+                                            <template v-if="userInfo && editingId === record.id">
+                                                <td>
+                                                    <input v-model.trim="editItem.title" class="form-control" required>
+                                                </td>
+                                                <td>
+                                                    <input v-model.trim="editItem.artist" class="form-control" required>
+                                                </td>
+                                                <td>
+                                                    <input v-model.trim="editItem.duration" type="number"
+                                                        class="form-control" required>
+                                                </td>
+                                                <td>
+                                                    <input v-model.trim="editItem.publicationYear" type="number"
+                                                        class="form-control" required>
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    <button type="button" class="btn btn-sm btn-primary me-1"
+                                                        @click="putItem" :disabled="isUpdating">
+                                                        {{ isUpdating ? 'Saving...' : 'Save' }}
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                        @click="cancelEdit" :disabled="isUpdating">
+                                                        Cancel
+                                                    </button>
+                                                </td>
+                                            </template>
+                                            <template v-else>
+                                                <td>{{record.title}}</td>
+                                                <td>{{record.artist}}</td>
+                                                <td>{{record.duration}}</td>
+                                                <td>{{record.publicationYear}}</td>
+                                                <td v-if="userInfo" class="text-nowrap">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary me-1"
+                                                        @click="startEdit(record)"
+                                                        :disabled="editingId !== null || deletingId !== null">
+                                                        Edit
+                                                    </button>
+                                                    <button id="deleteButton" class="btn btn-sm btn-outline-danger"
+                                                        @click="openDeleteModal(record)"
+                                                        :disabled="deletingId !== null">Delete Record</button>
+                                                </td>
+                                            </template>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -128,42 +167,42 @@
                 </div>
             </div>
         </div>
-<!-- Bootstrap modal for delete -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h2 class="modal-title fs-5" id="deleteModalLabel">Confirm deletion</h2>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
-                        @click="deleteTarget = null"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-0">
-                        Are you sure you want to delete <strong>{{ deleteTarget?.title }}</strong>?
-                        This action cannot be undone.
-                    </p>
-                    <p v-if="deleteError" class="alert alert-danger mt-3 mb-0" role="alert">
-                        {{ deleteError }}
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="deleteTarget = null"
-                        :disabled="deletingId !== null">
-                        Cancel
-                    </button>
-                    <button id="modalDeleteButton" type="button" class="btn btn-danger" @click="deleteItem"
-                        :disabled="!deleteTarget || deletingId !== null">
-                        {{ deletingId !== null ? 'Deleting...' : 'Delete record' }}
-                    </button>
+        <!-- Bootstrap modal for delete -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h2 class="modal-title fs-5" id="deleteModalLabel">Confirm deletion</h2>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close" @click="deleteTarget = null"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">
+                            Are you sure you want to delete <strong>{{ deleteTarget?.title }}</strong>?
+                            This action cannot be undone.
+                        </p>
+                        <p v-if="deleteError" class="alert alert-danger mt-3 mb-0" role="alert">
+                            {{ deleteError }}
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            @click="deleteTarget = null" :disabled="deletingId !== null">
+                            Cancel
+                        </button>
+                        <button id="modalDeleteButton" type="button" class="btn btn-danger" @click="deleteItem"
+                            :disabled="!deleteTarget || deletingId !== null">
+                            {{ deletingId !== null ? 'Deleting...' : 'Delete record' }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     </div>
 
 
-    
+
     </div>
     <!-- Import App -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
